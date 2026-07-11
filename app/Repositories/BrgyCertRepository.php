@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\BrgyCertificate;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class BrgyCertRepository
 {
@@ -25,14 +25,17 @@ class BrgyCertRepository
         $brgyCertificate->update($data);
     }
 
-    public function getBrgyCerts(): Collection
+    public function getBrgyCerts(): array
     {
-        return BrgyCertificate::query()
-            ->get([
-                'id',
-                'cert_name',
-                'slug',
-                'cert_description'
-            ]);
+        return Cache::rememberForever(BrgyCertificate::BRGY_CERTIFICATE_CACHE_KEY, function () {
+            return BrgyCertificate::query()
+                ->get([
+                    'id',
+                    'cert_name',
+                    'slug',
+                    'cert_description'
+                ])
+                ->toArray();
+        });
     }
 }
