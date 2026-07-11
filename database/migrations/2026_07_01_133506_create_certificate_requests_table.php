@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('requested_by')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('status')->default(CertReqEnum::NEW->value);
             $table->dateTime('pick_up_at')->nullable();
+            $table->string('purpose')->nullable();
             $table->timestamps();
         });
     }
