@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'requested_by',
     'status',
     'pick_up_at',
-
+    'purpose'
 )]
 class CertificateRequest extends Model
 {
