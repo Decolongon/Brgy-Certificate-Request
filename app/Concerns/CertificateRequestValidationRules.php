@@ -26,6 +26,12 @@ trait CertificateRequestValidationRules
                 'nullable',
                 'date',
             ],
+            'purpose' => [
+                'required',
+                'string',
+                'max:255',
+                'min:10',
+            ],
         ];
     }
 }

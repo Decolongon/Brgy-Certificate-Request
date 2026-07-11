@@ -32,6 +32,7 @@ interface CertificateRequest {
     requested_by: number;
     status: 'new' | 'pending' | 'processing' | 'ready_to_pick_up';
     pick_up_at: string | null;
+    purpose:string;
     brgy_cert_request: BrgyCertificate;
     request_by: {
         id: number;
@@ -67,6 +68,7 @@ const certificateItems = computed(() =>
 );
 
 const createCertId = ref<number | null>(null);
+const purpose = ref('');
 
 const statusVariant: Record<string, 'secondary' | 'default' | 'outline' | 'destructive'> = {
     new: 'secondary',
@@ -105,7 +107,7 @@ const statusLabels: Record<string, string> = {
                     </DialogHeader>
 
                     <Form v-bind="CertiRequestController.store.form()" v-slot="{ errors, processing }" reset-on-success
-                        :on-success="() => { createCertId = null; }">
+                        :on-success="() => { createCertId = null; purpose = ''; }">
                         <div class="grid gap-4 py-2">
                             <div class="grid gap-2">
                                 <Label for="brgy_cert_id">Certificate Type</Label>
@@ -124,6 +126,22 @@ const statusLabels: Record<string, string> = {
                                 <p v-if="errors.pick_up_at" class="text-sm text-destructive">
                                     {{ errors.pick_up_at }}
                                 </p>
+                            </div>
+
+                            <div class="grid gap-2">
+                                <Label for="purpose">Purpose</Label>
+                                <textarea id="purpose" name="purpose"
+                                    class="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                    placeholder="State your purpose (min. 10 characters)" rows="3" maxlength="255"
+                                    :value="purpose" @input="purpose = ($event.target as HTMLTextAreaElement).value" />
+                                <div class="flex items-center justify-between">
+                                    <p v-if="errors.purpose" class="text-sm text-destructive">
+                                        {{ errors.purpose }}
+                                    </p>
+                                    <p v-else class="text-xs text-muted-foreground">
+                                        {{ purpose.length }} / 255
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
@@ -146,6 +164,7 @@ const statusLabels: Record<string, string> = {
                     <tr class="border-b border-sidebar-border/70 text-left text-sm text-muted-foreground">
                         <th class="px-4 py-3 font-medium">Certificate</th>
                         <th class="px-4 py-3 font-medium">Status</th>
+                        <th class="px-4 py-3 font-medium">Purpose</th>
                         <th class="px-4 py-3 font-medium">Pick Up Date</th>
                         <th class="px-4 py-3 font-medium">Actions</th>
                     </tr>
@@ -160,6 +179,9 @@ const statusLabels: Record<string, string> = {
                             <Badge :variant="statusVariant[request.status] || 'secondary'">
                                 {{ statusLabels[request.status] || request.status }}
                             </Badge>
+                        </td>
+                         <td class="px-4 py-3 text-sm">
+                            {{ request.purpose || 'N/A' }}
                         </td>
                         <td class="px-4 py-3 text-sm text-muted-foreground">
                             {{ request.pick_up_at ? request.pick_up_at.split('T')[0] : 'N/A' }}
@@ -178,7 +200,7 @@ const statusLabels: Record<string, string> = {
                                         <DialogDescription>
                                             Are you sure you want to delete this certificate request for
                                             <strong>&ldquo;{{ request.brgy_cert_request?.cert_name || 'Unknown'
-                                                }}&rdquo;</strong>?
+                                            }}&rdquo;</strong>?
                                             This action cannot be undone.
                                         </DialogDescription>
                                     </DialogHeader>
