@@ -83,6 +83,16 @@ const statusLabels: Record<string, string> = {
     processing: 'Processing',
     ready_to_pick_up: 'Ready to Pick Up',
 };
+
+const formatDate = (dateString: string | null): string => {
+    if (!dateString) return '\u2014';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+};
 </script>
 
 <template>
@@ -184,7 +194,7 @@ const statusLabels: Record<string, string> = {
                             {{ request.purpose || 'N/A' }}
                         </td>
                         <td class="px-4 py-3 text-sm text-muted-foreground">
-                            {{ request.pick_up_at ? request.pick_up_at.split('T')[0] : 'N/A' }}
+                            {{ formatDate(request.pick_up_at) }}
                         </td>
                         <td class="px-4 py-3">
                             <Dialog>

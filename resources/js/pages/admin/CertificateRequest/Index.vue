@@ -87,24 +87,6 @@ const residentItems = computed(() =>
 
 const createCertId = ref<number | null>(null);
 const createResidentId = ref<number | null>(isResident.value && authUser.value ? authUser.value.id : null);
-const editCertIds = ref<Record<number, number | null>>({});
-const editResidentIds = ref<Record<number, number | null>>({});
-
-function getEditCertId(requestId: number): number | null {
-    return editCertIds.value[requestId] ?? null;
-}
-
-function setEditCertId(requestId: number, value: number | string | null): void {
-    editCertIds.value[requestId] = value as number | null;
-}
-
-function getEditResidentId(requestId: number): number | null {
-    return editResidentIds.value[requestId] ?? null;
-}
-
-function setEditResidentId(requestId: number, value: number | string | null): void {
-    editResidentIds.value[requestId] = value as number | null;
-}
 
 const statusVariant: Record<string, 'secondary' | 'default' | 'outline' | 'destructive'> = {
     new: 'secondary',
@@ -309,30 +291,37 @@ const formatDate = (dateString: string | null): string => {
                                                 <div class="grid gap-2">
                                                     <Label for="edit_brgy_cert_id">Certificate Type</Label>
                                                     <Combobox
-                                                        :model-value="getEditCertId(request.id) ?? request.brgy_cert_id"
+                                                        :model-value="request.brgy_cert_id"
                                                         :items="certificateItems"
                                                         placeholder="Select a certificate type"
                                                         search-placeholder="Search certificates..."
                                                         empty-message="No certificates found."
-                                                        @update:model-value="(val) => setEditCertId(request.id, val)"
+                                                        disabled
                                                     />
-                                                    <input type="hidden" name="brgy_cert_id" :value="getEditCertId(request.id) ?? request.brgy_cert_id" />
                                                     <InputError :message="errors.brgy_cert_id" />
                                                 </div>
 
                                                 <div class="grid gap-2">
                                                     <Label for="edit_requested_by">Requested By</Label>
                                                     <Combobox
-                                                        :model-value="getEditResidentId(request.id) ?? request.requested_by"
+                                                        :model-value="request.requested_by"
                                                         :items="residentItems"
                                                         placeholder="Select a resident"
                                                         search-placeholder="Search residents..."
                                                         empty-message="No residents found."
-                                                        :disabled="isResident"
-                                                        @update:model-value="(val) => setEditResidentId(request.id, val)"
+                                                        disabled
                                                     />
-                                                    <input type="hidden" name="requested_by" :value="getEditResidentId(request.id) ?? request.requested_by" />
                                                     <InputError :message="errors.requested_by" />
+                                                </div>
+
+                                                <div class="grid gap-2">
+                                                    <Label for="edit_purpose">Purpose</Label>
+                                                    <textarea
+                                                        id="edit_purpose"
+                                                        class="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                                        :value="(request as any).purpose || ''"
+                                                        disabled
+                                                    ></textarea>
                                                 </div>
 
                                                 <div class="grid gap-2">
@@ -348,7 +337,7 @@ const formatDate = (dateString: string | null): string => {
 
                                                 <div class="grid gap-2">
                                                     <Label for="edit_pick_up_at">Pick Up Date</Label>
-                                                    <Input id="edit_pick_up_at" name="pick_up_at" type="date" :model-value="request.pick_up_at ? request.pick_up_at.split('T')[0] : ''" />
+                                                    <input id="edit_pick_up_at" name="pick_up_at" type="date" :value="request.pick_up_at ? request.pick_up_at.substring(0, 10) : ''" class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" />
                                                     <InputError :message="errors.pick_up_at" />
                                                 </div>
                                             </div>

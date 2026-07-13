@@ -26,7 +26,6 @@ const isResident = useIsResident();
 
     <!-- ─── Admin content ─── -->
     <template v-if="isAdmin">
-        <h1>This is admin</h1>
         <AdminComponent />
     </template>
 
