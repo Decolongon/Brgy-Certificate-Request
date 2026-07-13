@@ -24,6 +24,6 @@ class CertificateUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->validateCertificateRequest();
+        return $this->validateCertificateRequestUpdate();
     }
 }

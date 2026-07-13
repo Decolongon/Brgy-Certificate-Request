@@ -23,7 +23,10 @@ class CertificateReqRepository
 
     public function updateCertificateRequest(array $data, CertificateRequest $certificateRequest): void
     {
-        $certificateRequest->update($data);
+        $certificateRequest->update([
+            'status' => $data['status'],
+            'pick_up_at' => $data['pick_up_at'],
+        ]);
     }
 
     public function getAllCertificateRequests(): Collection

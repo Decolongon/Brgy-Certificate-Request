@@ -34,4 +34,18 @@ trait CertificateRequestValidationRules
             ],
         ];
     }
+
+    protected function validateCertificateRequestUpdate(): array
+    {
+        return [
+            'status' => [
+                'nullable',
+                Rule::enum(CertReqEnum::class),
+            ],
+            'pick_up_at' => [
+                'nullable',
+                'date',
+            ],
+        ];
+    }
 }
