@@ -54,6 +54,16 @@ php artisan serve
 npm run dev
 ```
 
+### Default Admin Account
+
+After running migrations, you can log in with the following pre-seeded credentials:
+
+| Field    | Value              |
+|----------|--------------------|
+| Email    | admin@gmail.com    |
+| Password | 12345678           |
+
+
 ## License
 
 The Laravel + Vue starter kit is open-sourced software licensed under the MIT license.
